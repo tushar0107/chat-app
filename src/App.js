@@ -1,43 +1,39 @@
 import { BrowserRouter, Link, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import './App.css';
-import {useContext} from 'react';
 import { ListPage } from './pages/ListPage';
 import Header from './components/Header';
-
-const wsContext = createContext();
+import wsContext from './Context';
 
 function App() {
-  var ws;
+  var socket;
 
-  if(ws){
-    ws.onerror = ws.onopen = ws.onclose = null;
-    ws.close();
+  if(socket){
+    socket.onerror = socket.onopen = socket.onclose = null;
+    socket.close();
   }
-  ws = new WebSocket('http://127.0.0.1:8626/7304431820');
 
-  const loadMsgs = async()=>{}
-
-  const addMsgs = (msg)=>{}
+  socket = new WebSocket('http://127.0.0.1:8626/7304431820');
 
 
-  if(ws.readyState===WebSocket.OPEN){
+
+  if(socket.readyState===WebSocket.OPEN){
     console.log('Online');
-  }else if(ws.readyState===WebSocket.CLOSED){
+  }else if(socket.readyState===WebSocket.CLOSED){
     console.log('Offline');
   }
 
-  ws.onmessage = (data)=>{
+  socket.onmessage = (data)=>{
     console.log(JSON.parse(data));
   }
 
-  ws.onclose = function(){
-    ws = null;
+  socket.onclose = function(){
+    socket = null;
   }
 
 
   return (
     <>
-      <wsContext.Provider>
+      <wsContext.Provider value={socket}>
         <BrowserRouter>
           <div id="main-container">
             <Header/>

@@ -1,9 +1,13 @@
-import { useState } from 'react';
-
+import { useContext, useState } from 'react';
+import wsContext from '../Context';
 
 export const ChatPage = ()=>{
 
+	const socket = useContext(wsContext);
+
 	const [text,setText] = useState('');
+
+	const [chats,setChats] = useState([]);
 
 	// const loadMsgs = async()=>{}
 
@@ -11,29 +15,28 @@ export const ChatPage = ()=>{
   
 	const sendMsg = (msg)=>{
 		console.log('sent', msg);
-		if(ws.readyState===WebSocket.OPEN){
-		  ws.send(JSON.stringify(msg));
+		if(socket.readyState===WebSocket.OPEN){
+		  socket.send(JSON.stringify(msg));
 		}
 	}
 	return (
     <>
       <div id="chat-container">
 		<div id="chat-area">
-      	  <div className="chat-msg received message">
-      	    <span className="msg-text">hello</span> <br />
-      	    <span className="msg-time">07:00</span>
-      	  </div>
-      	  <div className="chat-msg received message">
-      	    <span className="msg-text">msg 2</span> <br />
-      	    <span className="msg-time">07:00</span>
-      	  </div>
-      	  <div className="chat-msg sent message">
-      	    <span className="msg-text">msg 3</span> <br />
-      	    <span className="msg-time">07:00</span>
-      	  </div>
+			{
+				chats.map((chat,index)=>{
+					return (
+            			<div className="chat-msg received message">
+            			  <span className="msg-text">chat.msg</span> <br />
+            			  <span className="msg-time">chat.time</span>
+            			</div>
+          			);
+				})
+			}
+      	  
 		</div>
       	<div id="actions">
-      	  <input type="text" className='msg-input' value={text} onChange={(e) => {setText(e.target.value);}}></input>
+      	  <input type="text" className='msg-input' value={text} onChange={(e) => {setText(e.target.value);}} placeholder='Enter Message...'></input>
       	  <button onClick={()=>sendMsg({ msg: text })} className='send-btn'>Send</button>
       	</div>
       </div>
